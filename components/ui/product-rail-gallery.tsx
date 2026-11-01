@@ -429,3 +429,808 @@ function Fabric({ uid, kind, side, color, trim }: { uid: string; kind: GarmentKi
       <g fill="none" strokeLinecap="round" strokeLinejoin="round">
         {art.seams.map((d) => <path key={d} d={d} stroke="black" strokeOpacity="0.22" strokeWidth="0.8" />)}
         {art.stitches.map((d) => <path key={d} d={d} stroke={mix(color, 0.35)} strokeOpacity="0.5" strokeWidth="0.6" strokeDasharray="1.6 1.4" />)}
+        {art.cords?.map((d) => <path key={d} d={d} stroke={trim} strokeWidth="1.8" />)}
+      </g>
+      {art.cords?.map((d) => {
+        const end = d.trim().split(" ").at(-1)?.split(",").map(Number) ?? [0, 0];
+        return <rect key={`${d}-tip`} x={(end[0] ?? 0) - 1.4} y={(end[1] ?? 0) - 1} width="2.8" height="6" rx="1" fill={mix(trim, -0.3)} />;
+      })}
+      {art.buttons?.map(([x, y]) => (
+        <g key={`${x}-${y}`}>
+          <circle cx={x} cy={y} r="2.6" fill={mix(trim, -0.15)} />
+          <circle cx={(x ?? 0) - 0.6} cy={(y ?? 0) - 0.7} r="0.9" fill="white" fillOpacity="0.45" />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function SideArt({ uid, kind, color, trim }: { uid: string; kind: GarmentKind; color: string; trim: string }) {
+  const { body, sleeve, hood, cuff } = sideShapes(kind);
+  const knitted = kind === "knit";
+  const soft = `url(#${uid}-soft)`;
+  const hem = SIDE[kind].hem;
+  return (
+    <svg aria-hidden="true" viewBox={`0 0 ${VB_W} ${VB_H}`} preserveAspectRatio="xMidYMin meet" className="absolute inset-0 size-full overflow-visible">
+      <g filter={`url(#${uid}-cloth)`}>
+        {hood && <path d={hood} fill={mix(color, -0.14)} />}
+        {hood && <path d={hood} fill="none" stroke="black" strokeOpacity="0.2" strokeWidth="1.2" />}
+        <path d={body} fill={color} />
+        <g clipPath={`url(#${uid}-sb-${kind})`}>
+          {knitted && <rect width={VB_W} height={VB_H} fill={`url(#${uid}-knit)`} />}
+          <g filter={soft} fill="none" strokeLinecap="round">
+            <path d={`M90,${cuff + 10} C87,150 92,190 88,${hem - 4}`} stroke="black" strokeOpacity="0.24" strokeWidth="2.6" />
+            <path d={`M92,${cuff + 10} C89,150 94,190 90,${hem - 4}`} stroke="white" strokeOpacity="0.14" strokeWidth="1.2" />
+            <path d={`M106,${cuff + 6} C109,140 104,186 108,${hem - 2}`} stroke="black" strokeOpacity="0.17" strokeWidth="2.2" />
+            <path d={`M107.6,${cuff + 6} C110.6,140 105.6,186 109.6,${hem - 2}`} stroke="white" strokeOpacity="0.1" strokeWidth="1" />
+            <path d={`M99,${cuff + 30} C97,170 101,205 98,${hem - 2}`} stroke="black" strokeOpacity="0.1" strokeWidth="2" />
+            <path d={`M112,${cuff + 40} C113,170 111,200 113,${hem - 10}`} stroke="black" strokeOpacity="0.12" strokeWidth="1.6" />
+            <path d={`M84,${cuff + 50} C86,160 85,200 86,${hem - 6}`} stroke="white" strokeOpacity="0.2" strokeWidth="1.4" />
+            <path d={`M80,${cuff + 6} C90,${cuff + 12} 110,${cuff + 12} 120,${cuff + 7}`} stroke="black" strokeOpacity="0.4" strokeWidth="6" />
+            <path d={`M84,${hem + 1} C92,${hem + 6} 108,${hem + 6} 116,${hem + 1}`} stroke="black" strokeOpacity="0.32" strokeWidth="6" />
+          </g>
+          <rect width={VB_W} height={VB_H} fill={`url(#${uid}-sidevol)`} />
+          <rect width={VB_W} height={VB_H} fill={`url(#${uid}-drape)`} />
+          <rect width={VB_W} height={VB_H} filter={`url(#${uid}-grain)`} opacity="0.16" style={{ mixBlendMode: "multiply" }} />
+        </g>
+        <path d={sleeve} fill={color} />
+        <g clipPath={`url(#${uid}-ss-${kind})`}>
+          {knitted && <rect width={VB_W} height={VB_H} fill={`url(#${uid}-knit)`} />}
+          <g filter={soft} fill="none" strokeLinecap="round">
+            <path d={`M91,62 C88,78 90,${cuff - 14} 91,${cuff}`} stroke="black" strokeOpacity="0.16" strokeWidth="2.6" />
+            <path d={`M92.6,62 C89.6,78 91.6,${cuff - 14} 92.6,${cuff}`} stroke="white" strokeOpacity="0.12" strokeWidth="1.1" />
+            <path d={`M109,58 C112,76 110,${cuff - 14} 109,${cuff}`} stroke="black" strokeOpacity="0.2" strokeWidth="2.6" />
+            <path d={`M86,72 C94,80 104,86 115,${cuff - 10}`} stroke="black" strokeOpacity="0.1" strokeWidth="2.4" />
+            <path d="M84,53 C92,49 108,49 116,53" stroke="black" strokeOpacity="0.24" strokeWidth="3.6" />
+            <path d={`M81,${cuff - 2} C92,${cuff + 4} 108,${cuff + 5} 119,${cuff + 2}`} stroke="black" strokeOpacity="0.34" strokeWidth="3.2" />
+            <path d={`M85,60 C84,80 85,${cuff - 20} 85,${cuff - 4}`} stroke="white" strokeOpacity="0.22" strokeWidth="1.4" />
+            <ellipse cx="94" cy="47.5" rx="6" ry="2.4" fill="white" fillOpacity="0.22" stroke="none" />
+          </g>
+          <rect width={VB_W} height={VB_H} fill={`url(#${uid}-sidevol)`} />
+          <rect width={VB_W} height={VB_H} fill={`url(#${uid}-drape)`} />
+          <rect width={VB_W} height={VB_H} filter={`url(#${uid}-grain)`} opacity="0.16" style={{ mixBlendMode: "multiply" }} />
+        </g>
+        <path d={`M82,${cuff + 1} C92,${cuff + 6} 108,${cuff + 7} 118,${cuff + 4}`} fill="none" stroke={mix(color, 0.35)} strokeOpacity="0.45" strokeWidth="0.6" strokeDasharray="1.6 1.4" />
+        <path d={`M86,${hem - 3} C92,${hem + 1} 109,${hem + 1} 115,${hem - 3}`} fill="none" stroke={mix(color, 0.35)} strokeOpacity="0.4" strokeWidth="0.6" strokeDasharray="1.6 1.4" />
+      </g>
+      <ellipse cx="100" cy="46" rx="10" ry="3.2" fill={trim} />
+      <ellipse cx="100" cy="46" rx="10" ry="3.2" fill={`url(#${uid}-rib)`} />
+      <ellipse cx="100" cy="46" rx="10" ry="3.2" fill="none" stroke="black" strokeOpacity="0.2" strokeWidth="0.6" />
+    </svg>
+  );
+}
+
+function Photo({ src, alt, full }: { src: string; alt: string; full: boolean }) {
+  return <img src={src} alt={alt} draggable={false} className={`pointer-events-none absolute inset-x-0 bottom-0 size-auto w-full select-none object-contain object-top ${full ? "top-0 h-full" : "top-[8%] h-[92%]"}`} />;
+}
+
+type Sim = {
+  x: number[]; vx: number[]; tx: number[]; px: number[];
+  turn: number[]; vturn: number[]; tturn: number[];
+  swing: number[]; vswing: number[];
+  tag: number[]; vtag: number[];
+  drag: number; grab: number; free: number; last: number; raf: number;
+};
+
+function emptySim(): Sim {
+  return { x: [], vx: [], tx: [], px: [], turn: [], vturn: [], tturn: [], swing: [], vswing: [], tag: [], vtag: [], drag: -1, grab: 0, free: 0, last: 0, raf: 0 };
+}
+
+function footprint(h: number, angle: number, sideW = 0.4) {
+  const e = clamp(1 - angle / REST, 0, 1);
+  const ease = e * e * (3 - 2 * e);
+  return h * ASPECT * (sideW + (0.94 - sideW) * ease);
+}
+
+export function ClothingRailHero({
+  items,
+  eyebrow,
+  heading,
+  caption,
+  action,
+  autoplay = false,
+  interval = 2600,
+  hanger = "wood",
+  labels = DEFAULT_LABELS,
+  onOpenChange,
+  className,
+  ...rest
+}: ClothingRailHeroProps) {
+  const uid = React.useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const count = items.length;
+  const stageRef = React.useRef(null as HTMLDivElement | null);
+  const slots = React.useRef([] as (HTMLButtonElement | null)[]);
+  const swings = React.useRef([] as (HTMLSpanElement | null)[]);
+  const turns = React.useRef([] as (HTMLSpanElement | null)[]);
+  const sides = React.useRef([] as (HTMLSpanElement | null)[]);
+  const drapes = React.useRef([] as (HTMLSpanElement | null)[]);
+  const shades = React.useRef([] as (HTMLSpanElement | null)[]);
+  const shadows = React.useRef([] as (HTMLSpanElement | null)[]);
+  const tags = React.useRef([] as (HTMLSpanElement | null)[]);
+  const sim = React.useRef(emptySim());
+  const [size, setSize] = React.useState({ width: 0, h: 300, carousel: false });
+  const [active, setActive] = React.useState(null as number | null);
+  const [focusIndex, setFocusIndex] = React.useState(0);
+  const [openIndex, setOpenIndex] = React.useState(null as number | null);
+  const [reduced, setReduced] = React.useState(false);
+  const [playing, setPlaying] = React.useState(autoplay);
+  const [lifted, setLifted] = React.useState(null as number | null);
+  const returnFocus = React.useRef(null as number | null);
+  const pendingOpen = React.useRef(-1);
+  const pointer = React.useRef({ id: -1, index: -1, x: 0, y: 0, t: 0, moved: false, kind: "", swipe: 0, lastX: 0, lastT: 0, v: 0 });
+  const sideWidths = React.useMemo(() => items.map((item) => (item.image ? (item.sideImage ? 0.3 : 0.4) : SIDE[item.kind ?? "tee"].width)), [items]);
+  const live = React.useRef({ active: null as number | null, size, reduced, count, openIndex: null as number | null, carouselIndex: 0, sideWidths });
+  live.current = { ...live.current, active, size, reduced, count, openIndex, sideWidths };
+
+  const carouselIndex = size.carousel ? (active ?? live.current.carouselIndex) : null;
+
+  React.useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  React.useEffect(() => { setPlaying(autoplay); }, [autoplay]);
+
+  React.useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const measure = (width: number) => {
+      const sideW = live.current.sideWidths.reduce((sum, w) => sum + w, 0) / Math.max(1, live.current.sideWidths.length);
+      const restK = footprint(1, REST, sideW) + GAP;
+      const activeK = footprint(1, 0, sideW) + GAP;
+      const fit = (width - 24) / (count * restK + (activeK - restK));
+      const carousel = fit < MIN_WIDE_H;
+      const h = carousel ? Math.min(CAROUSEL_H, Math.max(220, width * 0.86)) : Math.min(MAX_H, fit);
+      setSize((old) => (Math.abs(old.width - width) < 0.5 && old.carousel === carousel && Math.abs(old.h - h) < 0.5 ? old : { width, h: Math.round(h), carousel }));
+    };
+    measure(stage.clientWidth);
+    const observer = new ResizeObserver((entries) => { const box = entries[0]; if (box) measure(box.contentRect.width); });
+    observer.observe(stage);
+    return () => observer.disconnect();
+  }, [count]);
+
+  const targets = React.useCallback((h: number, width: number, carousel: boolean, front: number | null) => {
+    const feet = items.map((_, i) => footprint(h, i === front ? 0 : REST, sideWidths[i]) + h * GAP);
+    if (carousel) {
+      const centre = front ?? 0;
+      const xs = feet.map(() => 0);
+      xs[centre] = width / 2;
+      for (let i = centre + 1; i < feet.length; i++) xs[i] = (xs[i - 1] ?? 0) + ((feet[i - 1] ?? 0) + (feet[i] ?? 0)) / 2;
+      for (let i = centre - 1; i >= 0; i--) xs[i] = (xs[i + 1] ?? 0) - ((feet[i + 1] ?? 0) + (feet[i] ?? 0)) / 2;
+      return xs;
+    }
+    const total = feet.reduce((sum, f) => sum + f, 0);
+    let cursor = (width - total) / 2;
+    return feet.map((f) => { const x = cursor + f / 2; cursor += f; return x; });
+  }, [items, sideWidths]);
+
+  const paint = React.useCallback((i: number) => {
+    const s = sim.current;
+    const { h } = live.current.size;
+    const w = h * ASPECT;
+    const slot = slots.current[i];
+    if (!slot) return;
+    const angle = s.turn[i] ?? REST;
+    const swing = s.swing[i] ?? 0;
+    slot.style.transform = `translate3d(${((s.x[i] ?? 0) - w / 2).toFixed(2)}px,0,0)`;
+    const sw = swings.current[i];
+    if (sw) sw.style.transform = `rotate(${swing.toFixed(3)}deg)`;
+    const e = clamp(1 - angle / REST, 0, 1);
+    const tu = turns.current[i];
+    const sd = sides.current[i];
+    if (tu) {
+      tu.style.transform = `perspective(${PERSPECTIVE}px) rotateY(${angle.toFixed(2)}deg)`;
+      tu.style.opacity = sd ? clamp((e - 0.44) / 0.12, 0, 1).toFixed(3) : "1";
+    }
+    if (sd) {
+      sd.style.opacity = clamp((0.56 - e) / 0.12, 0, 1).toFixed(3);
+      sd.style.transform = `perspective(${PERSPECTIVE}px) rotateY(${(Math.min(1, e * 2) * -84).toFixed(2)}deg)`;
+    }
+    const lag = clamp(-(s.vswing[i] ?? 0) * 0.018, -5, 5);
+    const dr = drapes.current[i];
+    if (dr) dr.style.setProperty("--drape", `${lag.toFixed(3)}deg`);
+    const sh = shades.current[i];
+    if (sh) sh.style.setProperty("--shade", (1 - lambert(angle)).toFixed(3));
+    const shadow = shadows.current[i];
+    if (shadow) shadow.style.transform = `translate3d(${(w * 0.05).toFixed(1)}px, ${(h * 0.035).toFixed(1)}px, 0) scaleX(${Math.max(0.12, Math.abs(Math.cos((angle * Math.PI) / 180))).toFixed(3)})`;
+    const tag = tags.current[i];
+    if (tag) tag.style.transform = `rotate(${(-12 + (s.tag[i] ?? 0)).toFixed(2)}deg)`;
+  }, []);
+
+  const step = React.useCallback((now: number) => {
+    const s = sim.current;
+    const n = live.current.count;
+    const dt = s.last ? Math.min(0.034, (now - s.last) / 1000) : 1 / 60;
+    s.last = now;
+    const { h, width, carousel } = live.current.size;
+    let busy = false;
+    const sub = 2;
+    const sdt = dt / sub;
+    for (let k = 0; k < sub; k++) {
+      for (let i = 0; i < n; i++) {
+        const before = s.vx[i] ?? 0;
+        if (i !== s.drag) {
+          const restoring = now > s.free;
+          const stiff = restoring ? 130 : 0;
+          const damp = restoring ? 2 * Math.sqrt(130) * 0.86 : 3.2;
+          const ax = -stiff * ((s.x[i] ?? 0) - (s.tx[i] ?? 0)) - damp * before;
+          s.vx[i] = before + ax * sdt;
+          s.x[i] = (s.x[i] ?? 0) + (s.vx[i] ?? 0) * sdt;
+        }
+        const accel = ((s.vx[i] ?? 0) - before) / sdt;
+        const ta = -150 * ((s.turn[i] ?? 0) - (s.tturn[i] ?? 0)) - 2 * Math.sqrt(150) * 0.78 * (s.vturn[i] ?? 0);
+        s.vturn[i] = (s.vturn[i] ?? 0) + ta * sdt;
+        s.turn[i] = (s.turn[i] ?? 0) + (s.vturn[i] ?? 0) * sdt;
+        const sa = -24 * (s.swing[i] ?? 0) - 2.1 * (s.vswing[i] ?? 0) - clamp(accel, -6000, 6000) * 0.0045;
+        s.vswing[i] = (s.vswing[i] ?? 0) + sa * sdt;
+        s.swing[i] = clamp((s.swing[i] ?? 0) + (s.vswing[i] ?? 0) * sdt, -12, 12);
+        const tagA = -46 * ((s.tag[i] ?? 0) - (s.swing[i] ?? 0) * 0.6) - 3.4 * (s.vtag[i] ?? 0) - (s.vswing[i] ?? 0) * 0.9;
+        s.vtag[i] = (s.vtag[i] ?? 0) + tagA * sdt;
+        s.tag[i] = clamp((s.tag[i] ?? 0) + (s.vtag[i] ?? 0) * sdt, -30, 30);
+      }
+      for (let pass = 0; pass < 2; pass++) {
+        for (let i = 0; i < n - 1; i++) {
+          const a = s.x[i] ?? 0;
+          const b = s.x[i + 1] ?? 0;
+          const minGap = (footprint(h, s.turn[i] ?? REST, live.current.sideWidths[i]) + footprint(h, s.turn[i + 1] ?? REST, live.current.sideWidths[i + 1])) / 2 + h * 0.012;
+          const overlap = minGap - (b - a);
+          if (overlap <= 0) continue;
+          if (i === s.drag) s.x[i + 1] = b + overlap;
+          else if (i + 1 === s.drag) s.x[i] = a - overlap;
+          else { s.x[i] = a - overlap / 2; s.x[i + 1] = b + overlap / 2; }
+          const va = s.vx[i] ?? 0;
+          const vb = s.vx[i + 1] ?? 0;
+          if (va > vb) {
+            const shared = (va + vb) / 2;
+            if (i !== s.drag) s.vx[i] = shared;
+            if (i + 1 !== s.drag) s.vx[i + 1] = shared;
+          }
+        }
+      }
+      if (!carousel && n > 0) {
+        const edge = h * 0.06;
+        const first = edge + footprint(h, s.turn[0] ?? REST, live.current.sideWidths[0]) / 2;
+        const last = width - edge - footprint(h, s.turn[n - 1] ?? REST, live.current.sideWidths[n - 1]) / 2;
+        if ((s.x[0] ?? 0) < first) { s.x[0] = first; s.vx[0] = Math.abs(s.vx[0] ?? 0) * 0.3; }
+        if ((s.x[n - 1] ?? 0) > last) { s.x[n - 1] = last; s.vx[n - 1] = -Math.abs(s.vx[n - 1] ?? 0) * 0.3; }
+      }
+    }
+    for (let i = 0; i < n; i++) {
+      paint(i);
+      if (Math.abs((s.vx[i] ?? 0)) > 0.4 || (now > s.free && Math.abs((s.x[i] ?? 0) - (s.tx[i] ?? 0)) > 0.25) || Math.abs((s.turn[i] ?? 0) - (s.tturn[i] ?? 0)) > 0.05 || Math.abs(s.vturn[i] ?? 0) > 0.05 || Math.abs(s.swing[i] ?? 0) > 0.02 || Math.abs(s.vswing[i] ?? 0) > 0.05 || Math.abs((s.tag[i] ?? 0)) > 0.05 || Math.abs(s.vtag[i] ?? 0) > 0.08) busy = true;
+    }
+    if (s.drag >= 0 || now < s.free) busy = true;
+    if (busy) s.raf = requestAnimationFrame(step);
+    else {
+      s.raf = 0; s.last = 0;
+      for (let i = 0; i < n; i++) { if (now > s.free) s.x[i] = s.tx[i] ?? 0; s.swing[i] = 0; s.vswing[i] = 0; s.tag[i] = 0; s.vtag[i] = 0; paint(i); }
+    }
+  }, [paint]);
+
+  const kick = React.useCallback(() => {
+    const s = sim.current;
+    if (live.current.reduced) {
+      for (let i = 0; i < live.current.count; i++) { s.x[i] = s.tx[i] ?? 0; s.turn[i] = s.tturn[i] ?? REST; s.vx[i] = 0; s.vturn[i] = 0; s.swing[i] = 0; s.vswing[i] = 0; paint(i); }
+      return;
+    }
+    if (!s.raf) { s.last = 0; s.raf = requestAnimationFrame(step); }
+  }, [paint, step]);
+
+  const impulse = React.useCallback((i: number, amount: number) => {
+    const s = sim.current;
+    if (live.current.reduced || i < 0 || i >= live.current.count) return;
+    s.vswing[i] = (s.vswing[i] ?? 0) + amount;
+    kick();
+  }, [kick]);
+
+  React.useLayoutEffect(() => {
+    if (!size.width) return;
+    const s = sim.current;
+    const front = size.carousel ? (active ?? live.current.carouselIndex) : active;
+    const xs = targets(size.h, size.width, size.carousel, front);
+    const fresh = s.x.length !== count;
+    for (let i = 0; i < count; i++) {
+      s.tx[i] = (xs[i] ?? 0) + (size.carousel ? pointer.current.swipe : 0);
+      s.tturn[i] = i === front ? 0 : REST;
+      if (fresh || reduced) {
+        s.x[i] = s.tx[i] ?? 0; s.vx[i] = 0; s.px[i] = 0;
+        s.turn[i] = s.tturn[i] ?? REST; s.vturn[i] = 0;
+        s.swing[i] = s.swing[i] ?? 0; s.vswing[i] = s.vswing[i] ?? 0; s.tag[i] = 0; s.vtag[i] = 0;
+      }
+    }
+    if (fresh) { s.x.length = count; for (let i = 0; i < count; i++) paint(i); }
+    kick();
+  }, [size, active, count, reduced, targets, paint, kick]);
+
+  const brushed = React.useRef(false);
+  React.useEffect(() => {
+    if (!size.width || brushed.current || reduced) return;
+    brushed.current = true;
+    const timers = items.map((_, i) => window.setTimeout(() => impulse(i, 46 - i * 2.5), 120 + i * 55));
+    return () => timers.forEach((t) => window.clearTimeout(t));
+  }, [size.width, reduced, items, impulse]);
+
+  React.useEffect(() => () => { cancelAnimationFrame(sim.current.raf); sim.current.raf = 0; }, []);
+
+  React.useLayoutEffect(() => {
+    if (openIndex !== null || lifted !== null || returnFocus.current === null) return;
+    const index = returnFocus.current;
+    returnFocus.current = null;
+    slots.current[index]?.focus({ preventScroll: true });
+  }, [openIndex, lifted]);
+
+  const choose = React.useCallback((index: number | null) => {
+    setActive((old) => {
+      if (old === index) return old;
+      if (index !== null) { impulse(index - 1, -30); impulse(index + 1, 30); }
+      if (old !== null && old !== index) { impulse(old - 1, 14); impulse(old + 1, -14); }
+      if (index !== null) live.current.carouselIndex = index;
+      return index;
+    });
+  }, [impulse]);
+
+  const stop = React.useCallback(() => setPlaying(false), []);
+
+  React.useEffect(() => {
+    if (!playing || reduced || openIndex !== null || count === 0 || !size.width) return;
+    const first = window.setTimeout(function advance() {
+      const current = live.current.active;
+      choose(current === null ? 0 : (current + 1) % live.current.count);
+      timer = window.setTimeout(advance, interval);
+    }, active === null ? 1100 : interval);
+    let timer = first;
+    return () => window.clearTimeout(timer);
+  }, [playing, reduced, openIndex, count, interval, size.width, choose, active]);
+
+  const open = React.useCallback((index: number) => {
+    stop();
+    setActive(index);
+    setOpenIndex(index);
+    onOpenChange?.(index);
+  }, [onOpenChange, stop]);
+
+  const close = React.useCallback(() => {
+    setOpenIndex(null);
+    onOpenChange?.(null);
+  }, [onOpenChange]);
+
+  function nearest(clientX: number, clientY: number) {
+    const stage = stageRef.current;
+    if (!stage) return null;
+    const box = stage.getBoundingClientRect();
+    const x = clientX - box.left;
+    const y = clientY - box.top;
+    const { h } = live.current.size;
+    if (y < 0 || y > h + 46) return null;
+    const s = sim.current;
+    let best = null as number | null;
+    let distance = Infinity;
+    for (let i = 0; i < live.current.count; i++) {
+      const half = footprint(h, s.turn[i] ?? REST, live.current.sideWidths[i]) / 2 + 4;
+      const d = Math.abs(x - (s.x[i] ?? 0));
+      if (d < half && d < distance) { best = i; distance = d; }
+    }
+    return best;
+  }
+
+  const onPointerMove = (event: React.PointerEvent) => {
+    const p = pointer.current;
+    const s = sim.current;
+    const stage = stageRef.current;
+    if (p.id === event.pointerId && stage) {
+      const dx = event.clientX - p.x;
+      const now = performance.now();
+      if (!p.moved && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(event.clientY - p.y)) {
+        p.moved = true;
+        stop();
+        if (stage.isConnected) stage.setPointerCapture(event.pointerId);
+        if (!live.current.size.carousel && p.index >= 0) {
+          s.drag = p.index;
+          s.grab = (event.clientX - stage.getBoundingClientRect().left) - (s.x[p.index] ?? 0);
+        }
+      }
+      if (p.moved) {
+        const v = (event.clientX - p.lastX) / Math.max(1, now - p.lastT);
+        p.v = p.v * 0.6 + v * 0.4;
+        p.lastX = event.clientX; p.lastT = now;
+        if (s.drag >= 0) {
+          const x = event.clientX - stage.getBoundingClientRect().left - s.grab;
+          s.vx[s.drag] = p.v * 1000;
+          s.x[s.drag] = x;
+          s.free = now + 900;
+          kick();
+        } else if (live.current.size.carousel) {
+          p.swipe = dx;
+          const xs = targets(live.current.size.h, live.current.size.width, true, live.current.active ?? live.current.carouselIndex);
+          for (let i = 0; i < live.current.count; i++) s.tx[i] = (xs[i] ?? 0) + dx;
+          kick();
+        }
+      }
+      return;
+    }
+    if (event.pointerType !== "mouse" || live.current.size.carousel || live.current.openIndex !== null) return;
+    const hit = nearest(event.clientX, event.clientY);
+    const current = live.current.active;
+    if (current !== null && hit !== current) {
+      const box = stage?.getBoundingClientRect();
+      const keep = box ? Math.abs(event.clientX - box.left - (s.x[current] ?? 0)) < footprint(live.current.size.h, 0) / 2 + 14 : false;
+      if (keep && (hit === null || Math.abs(event.clientY - (box?.top ?? 0)) < live.current.size.h + 40)) return;
+    }
+    if (hit !== null) { stop(); choose(hit); }
+  };
+
+  const onPointerDown = (event: React.PointerEvent) => {
+    if (event.button !== 0) return;
+    const hit = nearest(event.clientX, event.clientY);
+    const now = performance.now();
+    pendingOpen.current = -1;
+    pointer.current = { id: event.pointerId, index: hit ?? -1, x: event.clientX, y: event.clientY, t: now, moved: false, kind: event.pointerType, swipe: 0, lastX: event.clientX, lastT: now, v: 0 };
+  };
+
+  const finishPointer = (event: React.PointerEvent, cancelled: boolean) => {
+    const p = pointer.current;
+    if (p.id !== event.pointerId) return;
+    const s = sim.current;
+    const stage = stageRef.current;
+    if (stage?.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
+    pointer.current = { ...p, id: -1 };
+    if (s.drag >= 0) {
+      s.drag = -1;
+      s.free = performance.now() + 700;
+      kick();
+      return;
+    }
+    if (p.moved && live.current.size.carousel) {
+      const dx = event.clientX - p.x;
+      const current = live.current.active ?? live.current.carouselIndex;
+      const step = Math.abs(dx) > 40 || Math.abs(p.v) > 0.45 ? (dx < 0 ? 1 : -1) : 0;
+      pointer.current.swipe = 0;
+      choose(clamp(current + step, 0, live.current.count - 1));
+      for (let i = 0; i < live.current.count; i++) impulse(i, clamp(-p.v * 22, -30, 30));
+      return;
+    }
+    if (cancelled || p.moved || p.index < 0) return;
+    stop();
+    const touch = p.kind !== "mouse";
+    if (touch && live.current.active !== p.index) choose(p.index);
+    else pendingOpen.current = p.index;
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
+    if (!keys.includes(event.key)) return;
+    event.preventDefault();
+    stop();
+    const from = active ?? focusIndex;
+    const next = event.key === "Home" ? 0 : event.key === "End" ? count - 1 : clamp(from + (event.key === "ArrowRight" ? 1 : -1), 0, count - 1);
+    setFocusIndex(next);
+    choose(next);
+    slots.current[next]?.focus({ preventScroll: true });
+  };
+
+  const current = active === null ? null : items[active];
+  const h = size.h;
+  const boxW = h * ASPECT;
+  const railY = Math.round(h * 0.07) + 10;
+  const railR = Math.max(3, Math.round((RAIL_R / VB_H) * h * 10) / 10);
+  const bottom = count ? Math.max(...items.map((item) => (item.image ? VB_H : SIDE[item.kind ?? "tee"].hem + 8))) / VB_H : 1;
+
+  return (
+    <section
+      {...rest}
+      data-slot="clothing-rail-hero"
+      data-mode={size.carousel ? "carousel" : "rail"}
+      data-active={active ?? ""}
+      aria-roledescription="clothing rail"
+      className={`relative isolate w-full overflow-hidden bg-background text-foreground ${className ?? ""}`}
+    >
+      <Defs uid={uid} />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(120% 70% at 18% 0%, color-mix(in oklab, var(--color-foreground) 7%, transparent), transparent 62%), linear-gradient(to bottom, transparent 55%, color-mix(in oklab, var(--color-foreground) 5%, transparent))" }} />
+      {(eyebrow || heading) && (
+        <header className="relative z-10 flex flex-col items-center gap-2 px-6 pt-8 text-center">
+          {eyebrow && <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-muted-foreground">{eyebrow}</p>}
+          {heading && <h2 className="text-balance text-2xl font-medium tracking-tight sm:text-3xl">{heading}</h2>}
+        </header>
+      )}
+
+      <div
+        ref={stageRef}
+        data-stage
+        role="group"
+        aria-label={heading ?? "Clothing rail"}
+        className="relative mt-5 w-full touch-pan-y select-none"
+        style={{ height: Math.round(railY + h * bottom + h * 0.05 + 12), overflowX: "clip" }}
+        onPointerMove={onPointerMove}
+        onPointerDown={onPointerDown}
+        onPointerUp={(event) => finishPointer(event, false)}
+        onPointerCancel={(event) => finishPointer(event, true)}
+        onPointerLeave={(event) => { if (event.pointerType === "mouse" && pointer.current.id < 0 && !size.carousel && !document.activeElement?.matches("[data-garment]:focus-visible")) choose(null); }}
+        onKeyDown={onKeyDown}
+      >
+        <div aria-hidden="true" data-rail className="pointer-events-none absolute inset-x-0 z-0" style={{ top: railY - railR, height: railR * 2 }}>
+          <div className="absolute inset-x-0 h-3 rounded-full bg-foreground/10 blur-[5px]" style={{ top: railR * 2 + 1 }} />
+          <div className="absolute inset-0 rounded-full" style={{ background: "linear-gradient(to bottom, color-mix(in oklab, var(--color-muted-foreground) 35%, white) 0%, white 18%, color-mix(in oklab, var(--color-muted-foreground) 70%, white) 38%, var(--color-muted-foreground) 62%, color-mix(in oklab, var(--color-muted-foreground) 55%, black) 100%)", boxShadow: "0 1px 0 color-mix(in oklab, var(--color-foreground) 18%, transparent)" }} />
+          <div className="absolute inset-0 rounded-full opacity-40 mix-blend-overlay" style={{ background: "repeating-linear-gradient(90deg, transparent 0 2px, color-mix(in oklab, white 40%, transparent) 2px 3px, transparent 3px 7px)" }} />
+          {[0, 1].map((side) => (
+            <div key={side} className="absolute top-1/2 h-7 w-4 -translate-y-1/2 rounded-[3px]" style={{ [side ? "right" : "left"]: 6, background: "linear-gradient(to right, color-mix(in oklab, var(--color-muted-foreground) 60%, white), var(--color-muted-foreground) 55%, color-mix(in oklab, var(--color-muted-foreground) 60%, black))", boxShadow: "0 3px 6px color-mix(in oklab, var(--color-foreground) 18%, transparent)" }}>
+              <span className="absolute left-1/2 top-1 size-1 -translate-x-1/2 rounded-full bg-foreground/35" />
+              <span className="absolute bottom-1 left-1/2 size-1 -translate-x-1/2 rounded-full bg-foreground/35" />
+            </div>
+          ))}
+        </div>
+
+        {items.map((item, i) => {
+          const kind = item.kind ?? "tee";
+          const color = item.color ?? "var(--color-muted-foreground)";
+          const trim = item.trim ?? mix(color, -0.12);
+          const turned = active === i;
+          const mask = item.image ? `url("${item.image}")` : silhouetteMask(kind, "front");
+          const photoBox = hanger === "none" ? "inset-0" : "inset-x-0 bottom-0 top-[8%]";
+          return (
+            <button
+              key={item.id}
+              ref={(node) => { slots.current[i] = node; }}
+              type="button"
+              data-garment={i}
+              data-front={turned || undefined}
+              tabIndex={i === (active ?? focusIndex) ? 0 : -1}
+              aria-label={item.name}
+              aria-describedby={`${uid}-caption`}
+              aria-pressed={turned}
+              className="absolute left-0 cursor-pointer rounded-xl outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+              style={{ top: railY - (HOOK_TOP / VB_H) * h, width: boxW, height: h, zIndex: turned ? 30 : 10 + i, visibility: lifted === i ? "hidden" : undefined, transform: `translate3d(${((sim.current.x[i] ?? 0) - boxW / 2).toFixed(2)}px,0,0)` }}
+              onFocus={() => { setFocusIndex(i); if (pointer.current.id < 0) { stop(); choose(i); } }}
+              onClick={(event) => { const pending = pendingOpen.current; pendingOpen.current = -1; if (event.detail === 0 || pending === i) open(i); }}
+            >
+              <span ref={(node) => { swings.current[i] = node; }} className="absolute inset-0" style={{ transformOrigin: `50% ${(HOOK_TOP / VB_H) * 100}%` }}>
+                <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ filter: `blur(${Math.max(3, h * 0.022).toFixed(1)}px)` }}>
+                  <span ref={(node) => { shadows.current[i] = node; }} className={`absolute block bg-black opacity-[0.16] dark:opacity-60 ${item.image ? photoBox : "inset-0"}`} style={{ WebkitMask: `${mask} top center / contain no-repeat`, mask: `${mask} top center / contain no-repeat` }} />
+                </span>
+                {(item.sideImage || !item.image) && (
+                  <span ref={(node) => { sides.current[i] = node; }} data-face="side" className="absolute inset-0" style={{ transform: `perspective(${PERSPECTIVE}px) rotateY(0deg)` }}>
+                    <SideHanger uid={uid} material={hanger} />
+                    {item.sideImage ? <Photo src={item.sideImage} alt="" full={hanger === "none"} /> : <SideArt uid={uid} kind={kind} color={color} trim={trim} />}
+                  </span>
+                )}
+                <span ref={(node) => { turns.current[i] = node; }} data-turn className="absolute inset-0 rounded-lg [transform-style:preserve-3d]" style={{ transform: `perspective(${PERSPECTIVE}px) rotateY(${REST}deg)`, opacity: item.image && !item.sideImage ? 1 : 0 }}>
+                  {(["front", "back"] as const).map((side) => (
+                    <span key={side} data-face={side} className="absolute inset-0 [backface-visibility:hidden]" style={{ transform: side === "back" ? "rotateY(180deg)" : undefined, ["--garment-color" as string]: color, ["--garment-under" as string]: mix(color, -0.42) }}>
+                      <Hanger uid={uid} side={side} kind={item.image ? null : kind} material={hanger} />
+                      <span ref={side === "front" ? (node) => { drapes.current[i] = node; } : undefined} data-drape className="absolute inset-0 origin-top [transform:skewX(var(--drape,0deg))]" style={side === "back" ? { transform: "skewX(calc(var(--drape, 0deg) * -1))" } : undefined}>
+                        {item.image
+                          ? <Photo src={(side === "back" ? item.backImage : undefined) ?? item.image} alt="" full={hanger === "none"} />
+                          : <Fabric uid={uid} kind={kind} side={side} color={color} trim={trim} />}
+                        <span ref={side === "front" ? (node) => { shades.current[i] = node; } : undefined} className={`pointer-events-none absolute bg-black ${item.image ? photoBox : "inset-0"}`} style={{ opacity: "var(--shade, 0.2)", WebkitMask: `${item.image ? `url("${(side === "back" ? item.backImage : undefined) ?? item.image}")` : silhouetteMask(kind, side)} top center / contain no-repeat`, mask: `${item.image ? `url("${(side === "back" ? item.backImage : undefined) ?? item.image}")` : silhouetteMask(kind, side)} top center / contain no-repeat` }} />
+                      </span>
+                    </span>
+                  ))}
+                </span>
+                {item.tag && (
+                  <span ref={(node) => { tags.current[i] = node; }} aria-hidden="true" className="pointer-events-none absolute left-1/2 origin-top" style={{ top: (32 / VB_H) * h, transform: "rotate(-12deg)" }}>
+                    <span className="block h-[14px] w-px translate-x-[3px] bg-foreground/35" />
+                    <span className="block -translate-x-1/2 translate-x-[3px] whitespace-nowrap rounded-[3px] border border-foreground/10 bg-card px-1.5 pb-1 pt-2 text-[9px] font-semibold leading-none tracking-wide text-card-foreground shadow-[0_2px_6px_color-mix(in_oklab,var(--color-foreground)_18%,transparent)]">
+                      <span className="absolute left-1/2 top-[3px] size-[3px] -translate-x-1/2 rounded-full bg-foreground/30" />
+                      {item.tag}
+                    </span>
+                  </span>
+                )}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {size.carousel && count > 1 && (
+        <div className="relative z-10 mt-1 flex justify-center gap-1.5" role="group" aria-label={labels.show}>
+          {items.map((item, i) => (
+            <button key={item.id} type="button" aria-label={`${labels.show} ${item.name}`} aria-current={carouselIndex === i} onClick={() => { stop(); choose(i); }} className={`h-1.5 rounded-full outline-none transition-[width,background-color] duration-300 focus-visible:ring-2 focus-visible:ring-ring ${carouselIndex === i ? "w-6 bg-foreground" : "w-1.5 bg-foreground/25 hover:bg-foreground/45"}`} />
+          ))}
+        </div>
+      )}
+
+      <div className="relative z-10 flex flex-col items-center gap-4 px-6 pb-8 pt-4 text-center">
+        <div id={`${uid}-caption`} aria-live="polite" className="min-h-[3.25rem]">
+          <p key={current?.id ?? "caption"} className="animate-in fade-in text-sm font-medium [animation-duration:300ms] motion-reduce:animate-none">{current ? current.name : caption}</p>
+          {current?.description && <p key={`${current.id}-d`} className="mx-auto mt-1 max-w-[42ch] text-[13px] leading-relaxed text-muted-foreground">{current.description}</p>}
+        </div>
+        {action}
+      </div>
+
+      {openIndex !== null && items[openIndex] && (
+        <Detail
+          uid={uid}
+          item={items[openIndex]}
+          index={openIndex}
+          total={count}
+          hanger={hanger}
+          labels={labels}
+          reduced={reduced}
+          source={() => turns.current[openIndex]?.getBoundingClientRect() ?? null}
+          onLift={(lift) => setLifted(lift ? openIndex : null)}
+          onClose={() => { const index = openIndex; returnFocus.current = index; close(); impulse(index, (index % 2 ? 1 : -1) * 44); }}
+        />
+      )}
+    </section>
+  );
+}
+
+function Detail({ uid, item, index, total, hanger, labels, reduced, source, onLift, onClose }: {
+  uid: string;
+  item: RailGarment;
+  index: number;
+  total: number;
+  hanger: "wood" | "matte" | "none";
+  labels: ClothingRailHeroLabels;
+  reduced: boolean;
+  source: () => DOMRect | null;
+  onLift: (lifted: boolean) => void;
+  onClose: () => void;
+}) {
+  const dialogRef = React.useRef(null as HTMLDivElement | null);
+  const figureRef = React.useRef(null as HTMLDivElement | null);
+  const spinRef = React.useRef(null as HTMLDivElement | null);
+  const closeRef = React.useRef(null as HTMLButtonElement | null);
+  const [side, setSide] = React.useState("front" as "front" | "back");
+  const [shown, setShown] = React.useState(false);
+  const angle = React.useRef({ value: 0, target: 0, velocity: 0, raf: 0, last: 0, dragging: false, startX: 0, startAngle: 0 });
+  const closing = React.useRef(false);
+  const kind = item.kind ?? "tee";
+  const color = item.color ?? "var(--color-muted-foreground)";
+  const trim = item.trim ?? mix(color, -0.12);
+  const titleId = `${uid}-detail-title`;
+
+  const spin = React.useCallback(() => {
+    const a = angle.current;
+    const node = spinRef.current;
+    const loop = (now: number) => {
+      const dt = a.last ? Math.min(0.034, (now - a.last) / 1000) : 1 / 60;
+      a.last = now;
+      const accel = -90 * (a.value - a.target) - 2 * Math.sqrt(90) * 0.82 * a.velocity;
+      a.velocity += accel * dt;
+      a.value += a.velocity * dt;
+      if (node) node.style.transform = `rotateY(${a.value.toFixed(2)}deg)`;
+      if (Math.abs(a.value - a.target) < 0.05 && Math.abs(a.velocity) < 0.05) { a.value = a.target; if (node) node.style.transform = `rotateY(${a.value}deg)`; a.raf = 0; a.last = 0; return; }
+      a.raf = requestAnimationFrame(loop);
+    };
+    if (reduced) { a.value = a.target; if (node) node.style.transform = `rotateY(${a.value}deg)`; return; }
+    if (!a.raf) a.raf = requestAnimationFrame(loop);
+  }, [reduced]);
+
+  const turnTo = React.useCallback((next: "front" | "back") => {
+    const a = angle.current;
+    const base = Math.round(a.value / 360) * 360;
+    a.target = base + (next === "back" ? 180 : 0);
+    if (Math.abs(a.target - a.value) > 180) a.target -= 360 * Math.sign(a.target - a.value);
+    setSide(next);
+    spin();
+  }, [spin]);
+
+  React.useLayoutEffect(() => {
+    const figure = figureRef.current;
+    const from = source();
+    closeRef.current?.focus({ preventScroll: true });
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    let animation = null as Animation | null;
+    if (figure && from && !reduced && from.width > 0) {
+      const to = figure.getBoundingClientRect();
+      const scale = from.height / to.height;
+      const dx = from.left + from.width / 2 - (to.left + to.width / 2);
+      const dy = from.top - to.top;
+      const lift = Math.min(90, Math.abs(dy) * 0.25 + 30);
+      onLift(true);
+      animation = figure.animate([
+        { transform: `translate(${dx}px, ${dy}px) scale(${scale})` },
+        { transform: `translate(${dx * 0.4}px, ${dy * 0.4 - lift}px) scale(${(scale + 1) / 2 * 1.03}) rotate(${dx > 0 ? -2.5 : 2.5}deg)`, offset: 0.5 },
+        { transform: "none" },
+      ], { duration: 680, easing: "cubic-bezier(.22,.85,.3,1)" });
+    }
+    const raf = requestAnimationFrame(() => setShown(true));
+    return () => { cancelAnimationFrame(raf); animation?.cancel(); document.body.style.overflow = overflow; cancelAnimationFrame(angle.current.raf); onLift(false); };
+  }, [source, reduced, onLift]);
+
+  const dismiss = React.useCallback(() => {
+    if (closing.current) return;
+    closing.current = true;
+    setShown(false);
+    const figure = figureRef.current;
+    const to = source();
+    if (!figure || !to || reduced || to.width === 0) { onClose(); return; }
+    const from = figure.getBoundingClientRect();
+    const scale = to.height / from.height;
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+    const dy = to.top - from.top;
+    const animation = figure.animate([
+      { transform: spinRef.current ? "none" : "none" },
+      { transform: `translate(${dx * 0.6}px, ${dy * 0.6 - 30}px) scale(${(scale + 1) / 2})`, offset: 0.55 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${scale})` },
+    ], { duration: 560, easing: "cubic-bezier(.45,0,.55,1)", fill: "forwards" });
+    animation.onfinish = () => onClose();
+  }, [source, reduced, onClose]);
+
+  React.useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      const dialog = dialogRef.current;
+      if (!dialog || dialog.contains(event.target as Node)) return;
+      if (event.key === "Escape") { event.preventDefault(); dismiss(); }
+      else if (event.key === "ArrowLeft" || event.key === "ArrowRight") turnTo(side === "front" ? "back" : "front");
+      else if (event.key === "Tab") { const first = dialog.querySelector("button"); if (first) { event.preventDefault(); first.focus(); } }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [dismiss, turnTo, side]);
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Escape") { event.preventDefault(); dismiss(); return; }
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") { turnTo(side === "front" ? "back" : "front"); return; }
+    if (event.key !== "Tab") return;
+    const controls = [...(dialogRef.current?.querySelectorAll("button") ?? [])].filter((node) => !node.disabled);
+    const first = controls[0];
+    const last = controls.at(-1);
+    if (!first || !last) return;
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  };
+
+  const stage = (
+    <div ref={figureRef} className="relative mx-auto aspect-[200/310] h-[min(62vh,560px)] max-h-full origin-top">
+      <div aria-hidden="true" className="absolute left-1/2 top-[-40vh] h-[40vh] w-[3px] -translate-x-1/2 rounded-full" style={{ background: "linear-gradient(to right, color-mix(in oklab, var(--color-muted-foreground) 50%, white), var(--color-muted-foreground), color-mix(in oklab, var(--color-muted-foreground) 50%, black))", top: `calc(-40vh + ${(HOOK_TOP / VB_H) * 100}%)` }} />
+      <div
+        className="absolute inset-0 cursor-grab touch-pan-y active:cursor-grabbing"
+        style={{ perspective: "1400px" }}
+        onPointerDown={(event) => { const a = angle.current; a.dragging = true; a.startX = event.clientX; a.startAngle = a.value; cancelAnimationFrame(a.raf); a.raf = 0; a.last = 0; event.currentTarget.setPointerCapture(event.pointerId); }}
+        onPointerMove={(event) => { const a = angle.current; if (!a.dragging) return; a.value = clamp(a.startAngle + (event.clientX - a.startX) * 0.45, a.startAngle - 220, a.startAngle + 220); if (spinRef.current) spinRef.current.style.transform = `rotateY(${a.value.toFixed(2)}deg)`; }}
+        onPointerUp={() => { const a = angle.current; if (!a.dragging) return; a.dragging = false; const facing = (((a.value % 360) + 360) % 360); turnTo(facing > 90 && facing < 270 ? "back" : "front"); }}
+        onPointerCancel={() => { angle.current.dragging = false; turnTo(side); }}
+      >
+        <div ref={spinRef} className="absolute inset-0 [transform-style:preserve-3d]">
+          {(["front", "back"] as const).map((face) => (
+            <div key={face} className="absolute inset-0 [backface-visibility:hidden]" style={{ transform: face === "back" ? "rotateY(180deg)" : undefined, ["--garment-color" as string]: color, ["--garment-under" as string]: mix(color, -0.42) }}>
+              <Hanger uid={uid} side={face} kind={item.image ? null : kind} material={hanger} />
+              {item.image
+                ? <Photo src={(face === "back" ? item.backImage : undefined) ?? item.image} alt={face === "front" ? item.name : ""} full={hanger === "none"} />
+                : <Fabric uid={uid} kind={kind} side={face} color={color} trim={trim} />}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  return createPortal(
+    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-6 text-foreground" onKeyDown={onKeyDown}>
+      <div aria-hidden="true" className={`absolute inset-0 bg-background/90 backdrop-blur-xl transition-opacity duration-300 motion-reduce:transition-none ${shown ? "opacity-100" : "opacity-0"}`} onClick={dismiss} />
+      <button ref={closeRef} type="button" onClick={dismiss} className={`absolute right-5 top-5 z-10 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium tracking-wide text-muted-foreground outline-none transition-[opacity,color] duration-300 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none ${shown ? "opacity-100" : "opacity-0"}`}>
+        {labels.close}
+        <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M3 3l10 10M13 3L3 13" /></svg>
+      </button>
+      <div className="relative grid w-full max-w-5xl items-center gap-10 pt-10 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+        {stage}
+        <div className={`flex flex-col gap-4 text-center transition-[opacity,transform] delay-150 duration-500 motion-reduce:transition-none md:text-left ${shown ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
+          <p className="font-mono text-[11px] tracking-[0.2em] text-muted-foreground">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</p>
+          <h3 id={titleId} className="text-2xl font-medium tracking-tight sm:text-3xl">{item.name}</h3>
+          {item.description && <p className="text-sm leading-relaxed text-muted-foreground">{item.description}</p>}
+          {item.details && item.details.length > 0 && (
+            <ul className="flex flex-wrap justify-center gap-2 md:justify-start">
+              {item.details.map((detail) => <li key={detail} className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground">{detail}</li>)}
+            </ul>
+          )}
+          <div role="group" aria-label={`${labels.front} / ${labels.back}`} className="mt-2 inline-flex justify-center gap-6 md:justify-start">
+            {(["front", "back"] as const).map((face) => (
+              <button key={face} type="button" aria-pressed={side === face} onClick={() => turnTo(face)} className={`relative pb-1.5 text-sm outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring ${side === face ? "text-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+                {face === "front" ? labels.front : labels.back}
+                <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-px origin-left bg-foreground transition-transform duration-300 motion-reduce:transition-none ${side === face ? "scale-x-100" : "scale-x-0"}`} />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+export default ClothingRailHero;

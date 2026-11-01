@@ -284,4 +284,72 @@ main[data-theme="light"] .rza-announcement a { color:#725a25; }
 main[data-theme="light"] .rza-announcement svg { color:#9a7830; }
 main[data-theme="light"] .rza-header { background:#f5f1e8; border-color:#d9d1c2; }
 main[data-theme="light"] .rza-brand { color:#28251f; }
-main[data-theme="light"] .rza-brand small { color:#8e702
+main[data-theme="light"] .rza-brand small { color:#8e702f; }
+main[data-theme="light"] .rza-nav a,main[data-theme="light"] .rza-footer a:not(.rza-brand) { color:#514c41; }
+main[data-theme="light"] .rza-header-cta { color:#4c4639; }
+main[data-theme="light"] .rza-header-cta svg { color:#95732b; }
+main[data-theme="light"] .rza-cart-trigger { color:#3e382d; border-color:#cfc3aa; }
+main[data-theme="light"] .rza-theme-toggle { color:#705922; border-color:#cfc3aa; }
+main[data-theme="light"] .rza-theme-toggle:hover { color:#fff9eb; background:#6b5427; }
+main[data-theme="light"] .rza-menu-toggle { color:#29261f; }
+/* The hero keeps its dark photographic overlay so its headline stays readable. */
+main[data-theme="light"] .rza-marquee { color:#5f5748; background:#ece5d7; border-color:#d8cfbd; }
+main[data-theme="light"] .rza-hanger-section { background:#e8e1d3; border-color:#d7cdb9; }
+main[data-theme="light"] .rza-hanger-section .rza-section-top h2 { color:#28251f; }
+main[data-theme="light"] .rza-hanger-section .rza-section-top > p { color:#6c6559; }
+main[data-theme="light"] .rza-rail { --color-background:#e8e1d3; --color-foreground:#29261f; --color-card:#fbf8f0; --color-card-foreground:#29261f; --color-border:#cfc3aa; --color-muted-foreground:#706958; --color-ring:#94732e; }
+main[data-theme="light"] .rza-collection { background:#f5f1e8; }
+main[data-theme="light"] .rza-section-top h2,main[data-theme="light"] .rza-story h2,main[data-theme="light"] .rza-contact h2 { color:#28251f; }
+main[data-theme="light"] .rza-overline { color:#80652d; }
+main[data-theme="light"] .rza-section-top > p { color:#6e675c; }
+main[data-theme="light"] .rza-filters { border-color:#d6cebf; }
+main[data-theme="light"] .rza-filters button { color:#716b60; }
+main[data-theme="light"] .rza-filters button.is-active { color:#725a25; }
+main[data-theme="light"] .rza-filters button span,main[data-theme="light"] .rza-piece-count { color:#81796a; }
+main[data-theme="light"] .rza-product-image { background:#e7e0d3; border-color:#ddd3c0; }
+main[data-theme="light"] .rza-product-label { color:#735a25; background:rgba(250,247,239,.92); border-color:#cfc09f; }
+main[data-theme="light"] .rza-product-info h3 { color:#2b2822; }
+main[data-theme="light"] .rza-product-info p { color:#777064; }
+main[data-theme="light"] .rza-product-info > button { color:#725a25; border-color:#cbbd9e; }
+main[data-theme="light"] .rza-collection-foot { color:#716a5f; border-color:#d6cebf; }
+main[data-theme="light"] .rza-collection-foot a { color:#725a25; }
+main[data-theme="light"] .rza-story { background:#e5dece; }
+main[data-theme="light"] .rza-story-image::after { background:linear-gradient(90deg,transparent 55%,#e5dece 100%); }
+main[data-theme="light"] .rza-story-copy > p:not(.rza-overline) { color:#625c51; }
+main[data-theme="light"] .rza-story-ornament { color:rgba(108,84,37,.12); }
+main[data-theme="light"] .rza-contact { background:#eee7d8; }
+main[data-theme="light"] .rza-contact-copy > p:not(.rza-overline) { color:#655f53; }
+main[data-theme="light"] .rza-contact-email { color:#514a3b; }
+main[data-theme="light"] .rza-contact-card { border-color:#c6b68f; background:linear-gradient(145deg,#f9f4e8,#e9e0cf 72%); }
+main[data-theme="light"] .rza-contact-card-index,main[data-theme="light"] .rza-contact-card-meta span { color:#80652d; }
+main[data-theme="light"] .rza-contact-card-main strong { color:#28251f; }
+main[data-theme="light"] .rza-contact-card-main p { color:#655f53; }
+main[data-theme="light"] .rza-contact-card-meta { border-color:#d4c8af; }
+main[data-theme="light"] .rza-contact-card-meta strong { color:#39342b; }
+main[data-theme="light"] .rza-footer { background:#f5f1e8; border-color:#d9d1c2; }
+main[data-theme="light"] .rza-footer-brand p { color:#655a43; }
+main[data-theme="light"] .rza-footer-brand > span,main[data-theme="light"] .rza-footer-column > span:not(.rza-footer-label) { color:#777064; }
+main[data-theme="light"] .rza-footer-label { color:#80652d; }
+main[data-theme="light"] .rza-footer-label small { color:#777064; }
+main[data-theme="light"] .rza-social-list > span { color:#554728; border-color:#cfc3aa; }
+main[data-theme="light"] .rza-footer-bottom { color:#777064; border-color:#d9d1c2; }
+body:has(main[data-theme="light"]) .rza-modal-backdrop { background:rgba(32,28,20,.55); }
+body:has(main[data-theme="light"]) .rza-modal { background:#f5f1e8; border-color:#c9b98f; }
+body:has(main[data-theme="light"]) .rza-modal-copy h2 { color:#28251f; }
+body:has(main[data-theme="light"]) .rza-modal-copy > p:not(.rza-overline) { color:#655f53; }
+body:has(main[data-theme="light"]) .rza-modal-close { color:#28251f; border-color:#c9b98f; background:#f5f1e8; }
+body:has(main[data-theme="light"]) [role="dialog"] { --background:#f5f1e8; --foreground:#28251f; --card:#fffdf7; --card-foreground:#28251f; --border:#d6cbb6; --muted-foreground:#706958; --ring:#94732e; }
+body:has(main[data-theme="light"]) .rza-cart-drawer { color:#28251f; background:#f5f1e8; border-color:#c9b98f; }
+body:has(main[data-theme="light"]) .rza-cart-head,body:has(main[data-theme="light"]) .rza-cart-bottom { border-color:#d6cbb6; }
+body:has(main[data-theme="light"]) .rza-cart-head h2 { color:#28251f; }
+body:has(main[data-theme="light"]) .rza-cart-head > button,body:has(main[data-theme="light"]) .rza-quantity button { color:#514c41; border-color:#cfc3aa; }
+body:has(main[data-theme="light"]) .rza-cart-item { border-color:#ded6c8; }
+body:has(main[data-theme="light"]) .rza-cart-item-info p,body:has(main[data-theme="light"]) .rza-cart-bottom > p { color:#777064; }
+body:has(main[data-theme="light"]) .rza-quantity { color:#39342b; }
+body:has(main[data-theme="light"]) .rza-continue-shopping { color:#725a25; }
+
+@media (max-width: 780px) {
+  main[data-theme="light"] .rza-nav { background:#f5f1e8; border-color:#d9d1c2; }
+  main[data-theme="light"] .rza-nav a { border-color:#ded6c8; }
+  .rza-hero-visual::before { background:linear-gradient(90deg,rgba(12,12,11,.93),rgba(12,12,11,.68) 43%,rgba(12,12,11,.12)),linear-gradient(0deg,rgba(8,8,8,.55),transparent 44%); }
+}
